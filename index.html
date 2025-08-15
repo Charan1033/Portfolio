@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CHARAN | Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Bebas+Neue&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+html {
+  scrollbar-width: none; /* Firefox */
+}
+html::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+  body {
+    margin: 0;
+    background: black;
+    font-family: 'IBM Plex Mono', monospace;
+    color: #0F0;
+    scroll-behavior: smooth;
+  }
+  canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -1;
+  }
+
+  /* Header */
+  header {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0px;
+    background: rgba(0,0,0,0.85);
+    z-index: 1000;
+    box-shadow: 0 5px 15px rgba(0,255,0,0.2);
+  }
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    color: #0F0;
+    cursor: pointer;
+    perspective: 500px;
+  }
+  .logo:hover {
+    transform: rotateY(20deg);
+    transition: transform 0.5s ease;
+  }
+  nav {
+    display: flex;
+    gap: 30px;
+  }
+  nav a {
+    color: #0F0;
+    text-decoration: none;
+    font-weight: 600;
+    position: relative;
+    perspective: 400px;
+  }
+  nav a::after {
+    content: '';
+    display: block;
+    height: 3px;
+    background: #0F0;
+    width: 0%;
+    transition: width 0.3s;
+    transform-origin: right;
+  }
+  nav a:hover::after {
+    width: 100%;
+    transform-origin: left;
+  }
+
+  section {
+    padding: 100px 20px;
+    min-height: 100vh;
+  }
+
+  .about-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #0F0;
+  }
+
+  /* Home intro */
+  .intro {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    white-space: pre-wrap;
+    color: #00FF00;
+    font-weight: 600;
+  }
+  .intro .name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: #00FF00;
+  }
+  .intro .desc {
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: #AFA;
+  }
+  .cursor {
+    display: inline-block;
+    width: 10px;
+    background: #00FF00;
+    animation: blink 0.8s infinite;
+  }
+  @keyframes blink {
+    0%, 50% { background: #00FF00; }
+    50%, 100% { background: transparent; }
+  }
+
+  /* About */
+  .about-box {
+    background: rgba(0,0,0,0.85);
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 900px;
+    margin: auto;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #CFC;
+  }
+
+  /* Skills */
+  .container { max-width: 1100px; margin: auto; }
+  .row { display: flex; flex-wrap: wrap; gap: 20px; }
+  .col-md-6 { flex: 1 1 calc(50% - 20px); min-width: 300px; }
+  .skill-group {
+    background: rgba(0,0,0,0.85);
+    border: 1px solid #0F0;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s;
+  }
+  .skill-group:hover { transform: scale(1.05); }
+  .skill-group-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #0F0;
+  }
+  .skill-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+  }
+  .skill-logo { width: 90px; height: 90px; object-fit: contain; }
+  .skill-name {
+    margin-top: 6px;
+    font-size: 1rem;
+    color: #CFC;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .skill-item:hover .skill-name { opacity: 1; text-shadow: 0 0 5px #0F0, 0 0 10px #0F0; }
+
+  /* Projects */
+  .col-md-4 { flex: 1 1 calc(33.333% - 20px); min-width: 280px; }
+  .project-card {
+    position: relative;
+    background: rgba(0,0,0,0.85);
+    border: 1px solid #0F0;
+    border-radius: 10px;
+    text-align: center;
+    overflow: hidden;
+    height: 350px;
+    padding-bottom: 15px;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .project-card:hover { transform: scale(1.05); box-shadow: 0 0 15px #0F0; }
+  .project-logo { width: 120px; height: 120px; object-fit: contain; margin-top: 20px; z-index: 1; }
+  .card-title { margin-top: 15px; color: #0F0; font-size: 1.1rem; font-weight: bold; }
+  .project-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.9);
+    color: #CFC;
+    opacity: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.3s;
+    text-align: center;
+    overflow-y: auto;
+    box-sizing: border-box;
+  }
+  .project-card:hover .project-overlay { opacity: 1; }
+  .project-overlay p { font-size: 0.9rem; margin-bottom: 15px; line-height: 1.4; }
+  .btn-success { background-color: #0F0; color: black; border: none; padding: 8px 15px; text-decoration: none; border-radius: 5px; }
+  .btn-success:hover { background-color: #0c0; color: white; }
+
+  /* Contact */
+  #contact {
+    background: black;
+    color: white;
+    padding: 40px 20px;
+    font-family: 'Poppins', sans-serif;
+    min-height: auto;
+  }
+  .contact-title { text-align: center; font-family:'Bebas Neue', sans-serif; font-size:2rem; color:#0F0; margin-bottom: 40px; }
+  .contact-top { display: flex; justify-content: center; align-items: flex-start; gap: 60px; flex-wrap: wrap; row-gap: 50px; }
+  .contact-item { display: flex; flex-direction: row; align-items: center; text-align: left; gap: 10px; min-width: 180px; font-size: 1rem; }
+  .contact-item img { width: 30px; height: 30px; filter: hue-rotate(90deg); }
+  .contact-item a { text-decoration: none; color: #0F0; display: flex; align-items: center; gap: 5px; }
+  .contact-download { text-align: center; margin-top: 30px; }
+</style>
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+
+<!-- Header -->
+<header>
+  <div class="logo" onclick="scrollToSection('home')">Sricharan's Portfolio</div>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<!-- Home -->
+<section id="home">
+  <div class="intro" id="intro"></div>
+</section>
+
+<!-- About -->
+<section id="about">
+  <div class="about-title">About Me</div>
+  <div class="about-box">
+    <p>I don’t chase opportunities — I engineer them.</p>
+
+<p>I’m a frontend developer with an instinct for clean design, a taste for efficient code, and an obsession with turning complex ideas into intuitive user experiences. Where others see limitations, I see system architecture. I believe in writing code that not only works but works beautifully — scalable, maintainable, and future-proof.</p>
+
+<p>Whether it’s crafting pixel-perfect UIs, optimizing performance to shave milliseconds, or integrating AI/ML models into real-world applications, I work with precision and purpose. Technology is my playing field, and problem-solving is my sport.</p>
+
+<p>My philosophy? Build it once, build it right, and make it something you’re proud to sign your name to.</p>
+  </div>
+</section>
+
+<!-- Skills -->
+<section id="skills">
+  <div class="about-title">Skills</div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="skill-group">
+          <div class="skill-group-title">Programming Languages</div>
+          <div style="display:flex;justify-content:center;flex-wrap:wrap;">
+            <div class="skill-item"><img class="skill-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg"><div class="skill-name">Python</div></div>
+            <div class="skill-item"><img class="skill-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg"><div class="skill-name">Java</div></div>
+            <div class="skill-item"><img class="skill-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg"><div class="skill-name">C</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="skill-group">
+          <div class="skill-group-title">Machine Learning</div>
+          <div style="display:flex;justify-content:center;flex-wrap:wrap;">
+            <div class="skill-item"><img class="skill-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg"><div class="skill-name">TensorFlow</div></div>
+            <div class="skill-item"><img class="skill-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytorch/pytorch-original.svg"><div class="skill-name">PyTorch</div></div>
+            <div class="skill-item"><img class="skill-logo" src="https://upload.wikimedia.org/wikipedia/commons/0/05/Scikit_learn_logo_small.svg"><div class="skill-name">Scikit-learn</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="skill-group">
+          <div class="skill-group-title">Web Development</div>
+          <div style="display:flex;justify-content:center;flex-wrap:wrap;">
+            <div class="skill-item"><img class="skill-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg"><div class="skill-name">HTML</div></div>
+            <div class="skill-item"><img class="skill-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg"><div class="skill-name">CSS</div></div>
+            <div class="skill-item"><img class="skill-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg"><div class="skill-name">JavaScript</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="skill-group">
+          <div class="skill-group-title">Tools & Databases</div>
+          <div style="display:flex;justify-content:center;flex-wrap:wrap;">
+            <div class="skill-item"><img class="skill-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg"><div class="skill-name">SQL</div></div>
+            <div class="skill-item"><img class="skill-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg"><div class="skill-name">AWS</div></div>
+            <div class="skill-item"><img class="skill-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg"><div class="skill-name">GitHub</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Projects -->
+<section id="projects">
+  <div class="about-title">Projects</div>
+  <div class="container">
+    <div class="row">
+      <!-- Project Cards (same as your code) -->
+      <div class="col-md-4"><div class="project-card"><img src="https://cdn-icons-png.flaticon.com/512/3097/3097150.png" class="project-logo"><div class="project-overlay"><p>A Python-based Connect-4 game implementing game logic and an interactive interface.</p><a href="https://github.com/Charan1033/connect-4-game.git" target="_blank" class="btn-success">GitHub</a></div><h5 class="card-title">Connect-4 Game</h5></div></div>
+      <div class="col-md-4"><div class="project-card"><img src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" class="project-logo"><div class="project-overlay"><p>AI-powered text generator using GPT-2 for emails, posts, and summaries.</p><a href="https://github.com/Charan1033/Personalized-text-generator-using-gpt-2.git" target="_blank" class="btn-success">GitHub</a></div><h5 class="card-title">Personalized Text Generator</h5></div></div>
+      <div class="col-md-4"><div class="project-card"><img src="https://cdn-icons-png.flaticon.com/512/1163/1163624.png" class="project-logo"><div class="project-overlay"><p>ML model predicting weather patterns using historical data.</p><a href="https://github.com/Charan1033/weather-prediction.git" target="_blank" class="btn-success">GitHub</a></div><h5 class="card-title">Weather Prediction</h5></div></div>
+      <div class="col-md-4"><div class="project-card"><img src="https://cdn-icons-png.flaticon.com/512/483/483947.png" class="project-logo"><div class="project-overlay"><p>IoT system detecting gas leaks & flames, alerting via Telegram bot.</p><a href="https://github.com/Charan1033/GAS-LEAKAGE-DETECTION.git" target="_blank" class="btn-success">GitHub</a></div><h5 class="card-title">Gas Leakage & Flame Detection</h5></div></div>
+      <div class="col-md-4"><div class="project-card"><img src="https://cdn-icons-png.flaticon.com/512/2721/2721292.png" class="project-logo"><div class="project-overlay"><p>LSTM model predicting GME stock price trends.</p><a href="https://github.com/Charan1033/Stock-Price-Trend-Prediction-Using-LSTM.git" target="_blank" class="btn-success">GitHub</a></div><h5 class="card-title">Stock Price Trend Prediction</h5></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <div class="contact-title">Contact Me</div>
+  <div class="contact-top">
+    <div class="contact-item">
+      <img src="https://cdn-icons-png.flaticon.com/512/597/597177.png" alt="Phone">
+      <a href="tel:+919550751519">9550751519</a>
+    </div>
+    <div class="contact-item">
+      <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" alt="Email">
+      <a href="mailto:marthasricharan@gmail.com">Gmail</a>
+    </div>
+    <div class="contact-item">
+      <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn">
+      <a href="www.linkedin.com/in/sricharan-martha-a7b077258" target="_blank">LinkedIn</a>
+    </div>
+    <div class="contact-item">
+      <img src="https://cdn-icons-png.flaticon.com/512/733/733553.png" alt="GitHub">
+      <a href="https://github.com/Charan1033" target="_blank">GitHub</a>
+    </div>
+  </div>
+  <div class="contact-download">
+    <a href="Martha_Sricharan_Resume.pdf" download class="btn-success">Download Resume</a>
+  </div>
+</section>
+
+<script>
+const canvas = document.getElementById('matrix');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+let letters = 'アァイィウヴエェオカガキギクケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモヤユヨラリルレロワンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+letters = letters.split('');
+const fontSize = 16;
+const columns = Math.floor(canvas.width / fontSize);
+const drops = Array(columns).fill(1);
+function drawMatrix() {
+  ctx.fillStyle = 'rgba(0,0,0,0.05)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.font = fontSize + 'px IBM Plex Mono';
+  for (let i = 0; i < drops.length; i++) {
+    const text = letters[Math.floor(Math.random() * letters.length)];
+    ctx.fillStyle = '#0F0';
+    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+    drops[i]++;
+  }
+}
+setInterval(drawMatrix, 33);
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+
+// Typing animation
+const introEl = document.getElementById("intro");
+const nameText = "Hi, I'm Sricharan Martha";
+const descText = "Frontend Developer and AIML Enthusiast";
+let charIndex = 0;
+function typeName() {
+  if (charIndex < nameText.length) {
+    introEl.innerHTML = `<div class="name">${nameText.substring(0, charIndex+1)}</div><div class="desc"></div><span class="cursor"></span>`;
+    charIndex++;
+    setTimeout(typeName, 150);
+  } else { typeDesc(); }
+}
+let descIndex = 0;
+function typeDesc() {
+  if (descIndex < descText.length) {
+    introEl.innerHTML = `<div class="name">${nameText}</div><div class="desc">${descText.substring(0, descIndex+1)}</div><span class="cursor"></span>`;
+    descIndex++;
+    setTimeout(typeDesc, 100);
+  } else {
+    introEl.innerHTML = `<div class="name">${nameText}</div><div class="desc">${descText}</div>`;
+  }
+}
+typeName();
+
+// Scroll to section when logo clicked
+function scrollToSection(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
